@@ -1,0 +1,191 @@
+import { useState, useEffect, useMemo } from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+  Button,
+  Typography,
+  Grid,
+} from "@mui/material";
+
+import useClient from "../../hooks/useClient";
+import useAuth from "../../hooks/useAuth";
+
+const UpdateModal = (props) => {
+  const { open, onClose, sale } = props;
+  const { updateSale } = useClient();
+  const { auth } = useAuth();
+
+  const [customerName, setCustomerName] = useState(sale.customerName);
+  const [companyName, setCompanyName] = useState(sale.companyName);
+  const [email, setEmail] = useState(sale.email);
+  const [contactNumber, setContactNumber] = useState(sale.contactNumber);
+  const [GSTNumber, setGSTNumber] = useState(sale.GSTNumber);
+  const [requireService, setRequireService] = useState(sale.requireService);
+  const [qty, setQty] = useState(sale.qty);
+  const [orderValue, setOrderValue] = useState(sale.orderValue);
+
+  useEffect(()=>{
+    setCompanyName(sale.companyName);
+    setCustomerName(sale.customerName);
+    setEmail(sale.email);
+    setContactNumber(sale.contactNumber);
+    setGSTNumber(sale.GSTNumber);
+    setRequireService(sale.requireService);
+    setQty(sale.qty);
+    setOrderValue(sale.orderValue);
+  },[sale])
+
+  const handleSubmit = () => {
+    if (!customerName || !companyName || !email || !contactNumber) return;
+
+    const data = {
+      id: sale._id,
+      clientId: auth.id,
+      customerName: customerName,
+      companyName: companyName,
+      email: email,
+      contactNumber: contactNumber,
+      GSTNumber: GSTNumber,
+      requireService: requireService,
+      qty: qty,
+      orderValue: orderValue
+    };
+    updateSale(data).then(res => {
+      if (res) {
+        setCompanyName("");
+        setCustomerName("");
+        setEmail("");
+        setContactNumber("");
+        setGSTNumber("");
+        setRequireService("");
+        setQty(0);
+        setOrderValue(0);
+        onClose();
+      }
+    });
+  };
+
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+      <DialogTitle display="flex" justifyContent="space-between">
+        <Typography variant="body1"
+          sx={{ margin: "10px" }}
+          fontWeight="bold"
+          fontSize="30px"
+          color="text.primary"
+          gutterBottom
+          noWrap
+        >
+          Update Sales Order
+        </Typography>
+      </DialogTitle>
+      <DialogContent>
+        <Grid container spacing={2}>
+          <Grid item xs={6} spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                sx={{ margin: "10px" }}
+                label="Customer Name"
+                required
+                value={customerName}
+                error={!customerName}
+                onChange={e => {
+                  setCustomerName(e.target.value)
+                }} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                sx={{ margin: "10px" }}
+                label="Company Name"
+                required
+                value={companyName}
+                error={!companyName}
+                onChange={e => {
+                  setCompanyName(e.target.value)
+                }} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                sx={{ margin: "10px" }}
+                label="Contact Number"
+                required
+                value={contactNumber}
+                error={!contactNumber}
+                onChange={e => {
+                  setContactNumber(e.target.value)
+                }} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                sx={{ margin: "10px" }}
+                label="Email"
+                required
+                value={email}
+                error={!email}
+                onChange={e => {
+                  setEmail(e.target.value)
+                }} />
+            </Grid>
+          </Grid>
+          <Grid item xs={6} spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                sx={{ margin: "10px" }}
+                label="GST Number"
+                value={GSTNumber}
+                onChange={e => {
+                  setGSTNumber(e.target.value)
+                }} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                sx={{ margin: "10px" }}
+                label="Require Service"
+                value={requireService}
+                onChange={e => {
+                  setRequireService(e.target.value)
+                }} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                sx={{ margin: "10px" }}
+                type="number"
+                label="Quantity"
+                value={qty}
+                onChange={e => {
+                  setQty(e.target.value)
+                }} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                type="number"
+                sx={{ margin: "10px" }}
+                label="Order Value"
+                value={orderValue}
+                onChange={e => {
+                  setOrderValue(e.target.value)
+                }} />
+            </Grid>
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="contained" onClick={handleSubmit}>Submit</Button>
+        <Button onClick={onClose} >Cancel</Button>
+      </DialogActions>
+    </Dialog >
+  )
+}
+
+export default UpdateModal;
