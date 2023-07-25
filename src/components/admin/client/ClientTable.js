@@ -19,7 +19,7 @@ import {
 import useAdmin from '../../../hooks/useAdmin';
 import useAuth from '../../../hooks/useAuth';
 
-const BASE_URL = "https://fe6-backend.onrender.com:8000/download/";
+const BASE_URL = "https://fe6-backend.onrender.com/download/";
 
 const ClientTable = () => {
   const { getClientList, clientList, updateClient } = useAdmin();
