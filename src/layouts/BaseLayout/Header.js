@@ -79,30 +79,10 @@ export default function Header() {
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
-                onClick={(e) => { setAnchorEl(e.currentTarget) }}
                 color="inherit"
               >
                 <Login sx={{ color: "cornflowerblue", fontSize: "40px" }} />
               </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={() => { setAnchorEl(null) }}
-              >
-                <MenuItem onClick={() => setAnchorEl(null)}><Link to="/client/login" style={{ textDecoration: "none", color: "black" }}>Client</Link></MenuItem>
-                <Divider sx={{ m: 2 }} />
-                <MenuItem onClick={() => setAnchorEl(null)}><Link to="/admin/login" style={{ textDecoration: "none", color: "black" }}>Admin</Link></MenuItem>
-              </Menu>
             </div>
           )}
         </Toolbar>

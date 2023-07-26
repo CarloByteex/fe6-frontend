@@ -9,27 +9,6 @@ const useAuth = () => {
   const auth = useSelector(state => state.reducers.auth.auth);
   const BASE_URL = process.env.REACT_APP_SERVER_URI;
 
-  const isAdmin = () => {
-    let url = BASE_URL + "admin/authenticate";
-    return new Promise((resolve) => {
-      axios.get(url, {
-        headers: {
-          authorization: token ? `Bearer ${token}` : "",
-        }
-      }).then(res => {
-        console.log(res.data)
-        if (res.data.name) {
-          dispatch(setAuth({data: res.data, isAdmin: true, status: ""}));
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      }).catch(err => {
-        resolve(false)
-      })
-    })
-  };
-
   const isClient = () => {
     let url = BASE_URL + "client/authenticate";
     return new Promise((resolve) => {
@@ -39,7 +18,7 @@ const useAuth = () => {
         }
       }).then(res => {
         if (res.data) {
-          dispatch(setAuth({data: res.data, isAdmin: false, status: res.data.status}));
+          dispatch(setAuth(res.data));
           resolve(true);
         } else {
           resolve(false);
@@ -50,43 +29,29 @@ const useAuth = () => {
     })
   };
 
-  const clientLogin = (email, password) => {
+  const login = (email, password) => {
     let url = BASE_URL + "client/login";
     return new Promise((resolve)=>{
       axios.post(url, { email, password }).then(res => {
         console.log(res)
-        dispatch(setAuth({data: res.data.client, isAdmin: false, status: res.data.client.status}));
+        dispatch(setAuth(res.data.client));
         dispatch(setToken(res.data.token));
-        resolve(true);
+        resolve("Action Success!");
       }).catch(err => {
-        resolve(false);
-        console.log(err);
+        resolve(err.response.data.response);
       })
     })
   };
 
-  const clientRegister = (data) => {
+  const register = (data) => {
     let url = BASE_URL + "client/register";
     return new Promise((resolve) => {
       axios.post(url, data).then(res => {
-        resolve(true);
-      }).catch(err => {
-        console.log(err);
-        resolve(false);
-      })
-    })
-  };
-
-  const adminLogin = (name, password) => {
-    let url = BASE_URL + "admin/login";
-    return new Promise((resolve)=>{
-      axios.post(url, { name, password }).then(res => {
-        dispatch(setAuth({data: res.data.adminUser, isAdmin: true, status: ""}));
+        dispatch(setAuth(res.data.newClient));
         dispatch(setToken(res.data.token));
-        resolve(true);
+        resolve("Action Success!");
       }).catch(err => {
-        console.log(err);
-        resolve(false);
+        resolve(err.response.data);
       })
     })
   };
@@ -97,11 +62,9 @@ const useAuth = () => {
   }
 
   return {
-    clientLogin,
-    clientRegister,
-    adminLogin,
+    login,
+    register,
     logout,
-    isAdmin,
     isClient,
     token,
     auth

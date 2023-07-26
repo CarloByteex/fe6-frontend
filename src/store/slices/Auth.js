@@ -16,8 +16,8 @@ const AuthSlice = createSlice({
     setAuth(state, action) {
       console.log(action.payload)
       let temp = {
-        id: action.payload.data._id,
-        name: action.payload.data.name,
+        id: action.payload._id,
+        name: action.payload.name,
         isAdmin: action.payload.isAdmin,
         status: action.payload.status
       };
