@@ -80,6 +80,9 @@ const ClientTable = () => {
                 case "Accepted":
                   clientColor = "green";
               }
+              if(client.isAdmin){
+                return;
+              }
               return (
                 <TableRow
                   hover
